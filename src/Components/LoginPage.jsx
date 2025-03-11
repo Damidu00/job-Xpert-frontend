@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -42,6 +43,11 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        <div className="flex justify-center items-center mt-4">
+          <button className="flex items-center gap-2 bg-gray-100 py-2 px-4 rounded shadow hover:bg-gray-200 transition">
+            <FcGoogle className="text-xl" /> Sign in with Google
+          </button>
+        </div>
       </div>
     </div>
   );
