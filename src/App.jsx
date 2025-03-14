@@ -19,7 +19,7 @@ function App() {
           <Route path='/admin/*' element={<AdminHomePage/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
-          <Route path='/cv-dashboard' element={<Dashboard/>}/>
+          <Route path='/cvdashboard' element={<Dashboard/>}/>
         </Routes>
       </BrowserRouter>
     </>
