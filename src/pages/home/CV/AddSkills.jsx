@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function AdminHomePage() {
+export default function AddSkills() {
   return (
     <div>
-      Admin Home page
+        
     </div>
   )
 }
