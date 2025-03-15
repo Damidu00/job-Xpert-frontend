@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { CiCirclePlus } from 'react-icons/ci'
 import { Link } from 'react-router-dom'
 
-export default function AddSkills() {
+export default function AddCertifications() {
 
   const [formFields,setFormFields] = useState([
-    {name : '', age : ''},
+    {institute : '', name : '',link : ''},
   ])
 
   const handleFormChange = ((event, index)=>{
@@ -21,8 +21,9 @@ export default function AddSkills() {
 
   const addFields = (()=>{
     let object = {
-      name: '',
-      age: ''
+        institute: '',
+        name: '',
+        link : ''
     }
     setFormFields([...formFields, object])
   })
@@ -35,25 +36,28 @@ export default function AddSkills() {
             {
               formFields.map((form,index)=>{
                 return (
-                  <div key={index} className="flex flex-col gap-4">
-                    <input type="text" name="category" placeholder="Programming *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
+                  <div key={index} className="flex flex-row gap-4">
+                    <input type="text" name="institute" placeholder="Institute Name:-SLIIT *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
                     value={form.category}
                     onChange={event => handleFormChange(event,index)}
                     
                     required />
-                    <div className=' w-full pl-32 '>
-                      <input type="text" name="items" placeholder="java,c,c++ " className=" w-full p-1.5 border rounded-lg focus:ring-2 focus:ring-gray-200"
+                    <div className=' w-full'>
+                        <input type="text" name="name" placeholder="Certificate Name:- Machine Learning *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
+                        value={form.category}
+                        onChange={event => handleFormChange(event,index)}
+                    
+                    required />
+                    </div>
+                    <input type="text" name="link" placeholder="Certificate Link:-https://open.uom.lk/lms/mod/customcert/verify_certificate.php " className=" w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200"
                       value={form.items}
                       onChange={event => handleFormChange(event,index)}
                       
-                      />
-                    </div>
+                      required/>
                   </div >
                 )
               })
-            }
-
-              
+            }              
               <div className='flex justify-end '>
                 <CiCirclePlus className='bg-gray-100 text-5xl rounded-full m-2 hover:bg-gray-300 text-blue-400 hover:text-blue-700'
                 
@@ -61,13 +65,11 @@ export default function AddSkills() {
                 
                 />
               </div>
-              
-              
-              
+                            
             </form>
 
             <div className="grid grid-cols-2 gap-4">
-                <Link to='/addcertifications'>
+                <Link to='/addreferees'>
                     <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
                     
                     onClick={submit}
