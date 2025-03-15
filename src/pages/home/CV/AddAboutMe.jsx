@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function AddAboutMe() {
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-2xl rounded-lg">
             <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Add About Me</h2>
             <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
