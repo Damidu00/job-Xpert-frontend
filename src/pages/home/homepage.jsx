@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SelectTemplate from './CV/SelectTemplate'
 import AddAboutMe from './CV/AddAboutMe'
+import AddSkills from './CV/AddSkills'
 
 export default function HomePage() {
   return (
@@ -9,6 +10,7 @@ export default function HomePage() {
         <Routes path='/'>
           <Route path='/selecttemplate' element={<SelectTemplate/>}/>
           <Route path='/addaboutme' element={<AddAboutMe/>}/>
+          <Route path='/addskills' element={<AddSkills/>}/>
         </Routes>
     </div>
   )
