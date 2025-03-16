@@ -30,7 +30,7 @@ export default function AddSkills() {
   return (
     <div className='bg-gray-100 h-screen w-full flex justify-center items-center'>
     <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Add Your Skills</h2>
+            <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Skills</h2>
             <form className="space-y-4" onSubmit={submit}>
 
             {

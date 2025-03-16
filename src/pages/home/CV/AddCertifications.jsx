@@ -29,8 +29,9 @@ export default function AddCertifications() {
   })
 
   return (
+    <div className='bg-gray-100 h-screen w-full flex justify-center items-center'>
     <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Add Your Skills</h2>
+            <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Certificate Details</h2>
             <form className="space-y-4" onSubmit={submit}>
 
             {
@@ -59,7 +60,7 @@ export default function AddCertifications() {
               })
             }              
               <div className='flex justify-end '>
-                <CiCirclePlus className='bg-gray-100 text-5xl rounded-full m-2 hover:bg-gray-300 text-blue-400 hover:text-blue-700'
+                <CiCirclePlus className='bg-gray-200 text-5xl rounded-full m-2 hover:bg-gray-50 text-blue-300 hover:text-blue-700 hover:scale-120'
                 
                 onClick={addFields}
                 
@@ -80,6 +81,7 @@ export default function AddCertifications() {
                 <button type="" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Cancel</button>
 
                 </div>
+        </div>
         </div>
   )
 }
