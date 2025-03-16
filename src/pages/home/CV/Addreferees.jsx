@@ -14,7 +14,7 @@ export default function AddReferees() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-xl">
+    <div className="max-w-3xl mx-auto mt-10 p-8  shadow-lg rounded-xl     backdrop-blur-lg bg-opacity-80">
       <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-8">Add Referees</h2>
       <form className="space-y-6">
         {referees.map((referee, index) => (
