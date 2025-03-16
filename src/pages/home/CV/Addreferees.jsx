@@ -14,11 +14,12 @@ export default function AddReferees() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-8  shadow-lg rounded-xl     backdrop-blur-lg bg-opacity-80">
+    <div className='bg-gray-100  w-full flex justify-center items-center'>
+    <div className="max-w-3xl mx-auto mt-10 mb-5 p-8  shadow-lg rounded-xl bg-white">
       <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-8">Add Referees</h2>
       <form className="space-y-6">
         {referees.map((referee, index) => (
-          <div key={index} className="p-6 border rounded-xl bg-gray-50 shadow-sm">
+          <div key={index} className="p-6 border rounded-xl shadow-sm">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Referee {index + 1}</h3>
             <div className="flex items-center space-x-6 mb-4">
               <label className="flex items-center space-x-2 cursor-pointer">
@@ -67,6 +68,7 @@ export default function AddReferees() {
           <button type="button" className="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition duration-300 shadow-md">Cancel</button>
         </div>
       </form>
+    </div>
     </div>
   );
 }
