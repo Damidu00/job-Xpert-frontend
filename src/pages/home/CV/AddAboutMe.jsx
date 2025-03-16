@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 
 export default function AddAboutMe() {
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-2xl rounded-lg">
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Add About Me</h2>
+    <div className='bg-gray-50 h-screen w-full flex justify-center items-center'>
+    <div className="max-w-2xl mx-auto p-6 shadow-2xl rounded-lg bg-white  ">
+            <h2 className="text-3xl font-bold  text-center mb-6 text-blue-600 ">Add Your Details</h2>
             <form className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <input type="text" name="firstName" placeholder="First Name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" required />
@@ -36,6 +37,7 @@ export default function AddAboutMe() {
 
                 </div>
             </form>
+        </div>
         </div>
   )
 }
