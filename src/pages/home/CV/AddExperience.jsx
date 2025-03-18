@@ -22,7 +22,7 @@ export default function AddExperience() {
           <textarea name="description" placeholder="Description (optional)" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 h-28 resize-none"></textarea>
           
           <div className="grid grid-cols-2 gap-4">
-            <Link to='/addskills'>
+            <Link to='/addprojects'>
               <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Add to CV</button>
             </Link>
             <button type="button" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition duration-300">Cancel</button>
