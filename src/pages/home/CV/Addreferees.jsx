@@ -62,7 +62,7 @@ export default function AddReferees() {
           </div>
         ))}
         <div className="grid grid-cols-2 gap-4">
-          <Link to="/addskills">
+          <Link to="/addeducations">
             <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">Add to CV</button>
           </Link>
           <button type="button" className="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition duration-300 shadow-md">Cancel</button>
