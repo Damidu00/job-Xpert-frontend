@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiCirclePlus } from "react-icons/ci";
+import axios from "axios";
 
 export default function AddProjects() {
+  const navigate = useNavigate()
   const [projects, setProjects] = useState([
     { title: "", description: "", githubLink: "", liveDemo: "", techStack: "" },
   ]);
@@ -17,21 +19,33 @@ export default function AddProjects() {
   const addFields = () => {
     setProjects([
       ...projects,
-      {
-        title: "",
-        description: "",
-        githubLink: "",
-        liveDemo: "",
-        techStack: "",
-      },
+      { title: "", description: "", githubLink: "", liveDemo: "", techStack: "" },
     ]);
   };
 
-  async function submit(e) {
-    e.preventDefault();
 
-    console.log("Submitted Projects:", projects);
-  }
+  const submit = async (e) => {
+    e.preventDefault();
+    
+    const postData = {
+      userId : "test1",
+      cvId : 'cv01',
+      projects: projects
+    }  
+
+    try {
+      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/projects/`,postData).then((res)=>{
+        console.log(res.data)
+        alert("Projects added successfully!");
+        navigate("/cvdashboard")
+      })
+
+      
+    } catch (error) {
+      console.error("Error adding projects:", error.response ? error.response.data : error.message);
+      alert("Failed to add projects.");
+    }
+  };
 
   const getOrdinal = (n) => {
     const suffixes = ["th", "st", "nd", "rd"];
@@ -42,10 +56,8 @@ export default function AddProjects() {
   return (
     <div className="bg-gray-100 h-full w-full flex justify-center items-center">
       <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
-        <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">
-          Add Your Projects
-        </h2>
-        <form className="space-y-4" onSubmit={submit}>
+        <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Projects</h2>
+        <form className="space-y-4" >
           {projects.map((project, index) => (
             <div key={index} className="border p-4 rounded-lg shadow-sm">
               <h3 className="text-lg font-semibold text-gray-700 mb-2">
@@ -103,18 +115,16 @@ export default function AddProjects() {
           </div>
         </form>
         <div className="grid grid-cols-2 gap-4">
-          <Link to="/addexperience">
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
-              onClick={submit}
-            >
-              Add to CV
-            </button>
-          </Link>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            onClick={submit}
+          >
+            Add to CV
+          </button>
           <button
             type="button"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-500 transition duration-300"
+            className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold hover:bg-gray-500 transition duration-300"
           >
             Cancel
           </button>
