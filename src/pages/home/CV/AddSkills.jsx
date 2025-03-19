@@ -1,9 +1,10 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { CiCirclePlus } from 'react-icons/ci'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function AddSkills() {
+  const navigate = useNavigate()
 
   const [formFields,setFormFields] = useState([
     {category : '', items : ''},
@@ -33,6 +34,7 @@ export default function AddSkills() {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/skills/`, postData)
       .then((res)=>{
         console.log(res)
+        navigate("/addcertifications")
       })
       alert("Skills added successfully!")
     } catch (error) {
@@ -82,7 +84,7 @@ export default function AddSkills() {
             </form>
 
             <div className="grid grid-cols-2 gap-4">
-                <Link to='/addcertifications'>
+                <Link to=''>
                     <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
                     
                     onClick={handleSubmit}

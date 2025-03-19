@@ -1,11 +1,14 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { CiCirclePlus } from 'react-icons/ci'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function AddCertifications() {
 
+  const navigate = useNavigate()
+
   const [formFields,setFormFields] = useState([
-    {institute : '', name : '',link : ''},
+    {instituteName : '', certificateName : '',Link : ''},
   ])
 
   const handleFormChange = ((event, index)=>{
@@ -15,15 +18,32 @@ export default function AddCertifications() {
   })
 
 
-  const submit = (()=>{
-    console.log(formFields)
-  })
+  const handleSubmit = async(event)=>{
+    event.preventDefault();
+
+    const postData = {
+      userId : "test1",
+      cvId : 'cv01',
+      certificates: formFields
+    }
+
+    try {
+      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/certificates/`,postData)
+      .then((res)=>{
+      console.log(res.data)
+      alert("succ")
+      navigate("/addreferees")
+    })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const addFields = (()=>{
     let object = {
-        institute: '',
-        name: '',
-        link : ''
+      instituteName: '',
+      certificateName: '',
+      Link : ''
     }
     setFormFields([...formFields, object])
   })
@@ -32,26 +52,26 @@ export default function AddCertifications() {
     <div className='bg-gray-100 h-screen w-full flex justify-center items-center'>
     <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Certificate Details</h2>
-            <form className="space-y-4" onSubmit={submit}>
+            <form className="space-y-4">
 
             {
               formFields.map((form,index)=>{
                 return (
                   <div key={index} className="flex flex-row gap-4">
-                    <input type="text" name="institute" placeholder="Institute Name:-SLIIT *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
-                    value={form.category}
+                    <input type="text" name="instituteName" placeholder="Institute Name:-SLIIT *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
+                    value={form.instituteName}
                     onChange={event => handleFormChange(event,index)}
                     
                     required />
                     <div className=' w-full'>
-                        <input type="text" name="name" placeholder="Certificate Name:- Machine Learning *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
-                        value={form.category}
+                        <input type="text" name="certificateName" placeholder="Certificate Name:- Machine Learning *" className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200" 
+                        value={form.certificateName}
                         onChange={event => handleFormChange(event,index)}
                     
                     required />
                     </div>
-                    <input type="text" name="link" placeholder="Certificate Link:-https://open.uom.lk/lms/mod/customcert/verify_certificate.php " className=" w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200"
-                      value={form.items}
+                    <input type="text" name="Link" placeholder="Certificate Link:-https://open.uom.lk/lms/mod/customcert/verify_certificate.php " className=" w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200"
+                      value={form.Link}
                       onChange={event => handleFormChange(event,index)}
                       
                       required/>
@@ -73,7 +93,7 @@ export default function AddCertifications() {
                 <Link to='/addreferees'>
                     <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
                     
-                    onClick={submit}
+                    onClick={handleSubmit}
 
                     >Add to CV</button>
                 </Link>
