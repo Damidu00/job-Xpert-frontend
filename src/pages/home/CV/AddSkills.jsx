@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { CiCirclePlus } from 'react-icons/ci'
 import { Link } from 'react-router-dom'
@@ -5,7 +6,7 @@ import { Link } from 'react-router-dom'
 export default function AddSkills() {
 
   const [formFields,setFormFields] = useState([
-    {name : '', age : ''},
+    {category : '', items : ''},
   ])
 
   const handleFormChange = ((event, index)=>{
@@ -15,23 +16,36 @@ export default function AddSkills() {
   })
 
 
-  const submit = (()=>{
-    console.log(formFields)
-  })
+  const addFields = () => {
+    setFormFields([...formFields, { category: '', items: '' }])
+  }
 
-  const addFields = (()=>{
-    let object = {
-      name: '',
-      age: ''
+  const handleSubmit = async (event) => {
+    event.preventDefault(); 
+
+    const postData = {
+      userId : "test1",
+      cvId : 'cv01',
+      skills: formFields
     }
-    setFormFields([...formFields, object])
-  })
+
+    try {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/skills/`, postData)
+      .then((res)=>{
+        console.log(res)
+      })
+      alert("Skills added successfully!")
+    } catch (error) {
+      console.error("Error:", error)
+      alert("Failed to add skills")
+    }
+  }
 
   return (
     <div className='bg-gray-100 h-screen w-full flex justify-center items-center'>
     <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Skills</h2>
-            <form className="space-y-4" onSubmit={submit}>
+            <form className="space-y-4" >
 
             {
               formFields.map((form,index)=>{
@@ -71,7 +85,7 @@ export default function AddSkills() {
                 <Link to='/addcertifications'>
                     <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
                     
-                    onClick={submit}
+                    onClick={handleSubmit}
 
                     >Add to CV</button>
                 </Link>
