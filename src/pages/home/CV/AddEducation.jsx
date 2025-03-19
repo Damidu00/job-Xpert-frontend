@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CiCirclePlus } from 'react-icons/ci';
 import axios from 'axios';
 
 export default function AddEducation() {
+  const navigate = useNavigate()
   const [education, setEducation] = useState([
     { eduLevel: '', school: '', degree: '', startDate: '', endDate: '', description: '' },
   ]);
@@ -30,9 +31,9 @@ export default function AddEducation() {
         cvId,
         details: education
       });
-
       console.log(response.data.message);
       alert("Education details saved successfully!");
+      navigate("/addexperiences")
 
     } catch (error) {
       console.error("Error saving education details:", error);
