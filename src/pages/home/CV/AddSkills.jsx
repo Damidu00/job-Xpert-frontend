@@ -28,7 +28,7 @@ export default function AddSkills() {
       cvId : 'cv01',
       skills: formFields
     }
-
+    console.log(postData)
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/skills/`, postData)
       .then((res)=>{
