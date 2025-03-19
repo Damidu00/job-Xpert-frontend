@@ -5,13 +5,6 @@ import { Link } from 'react-router-dom'
 
 export default function Dashboard() {
 
-  useEffect(()=>{
-    axios.get(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/12345`)
-    .then((res)=>{
-      console.log(res.data)
-    })
-  },[])
-
   return (
     <div className='bg-gray-200 h-screen w-full flex justify-center items-center'>
         <div className='w-[900px] h-[600px] bg-gray-100 shadow-2xl'>
