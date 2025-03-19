@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CiCirclePlus } from 'react-icons/ci';
+import axios from 'axios';
 
 export default function AddEducation() {
   const [education, setEducation] = useState([
@@ -18,9 +19,25 @@ export default function AddEducation() {
     setEducation([...education, { eduLevel: '', school: '', degree: '', startDate: '', endDate: '', description: '' }]);
   };
 
-  const handleSubmit = (e) => {
+  const userId = "12345";
+  const cvId = "67890"; 
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted Education:', education);
+    try {
+      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/education/", {
+        userId,
+        cvId,
+        details: education
+      });
+
+      console.log(response.data.message);
+      alert("Education details saved successfully!");
+
+    } catch (error) {
+      console.error("Error saving education details:", error);
+      alert("Failed to save education details!");
+    }
   };
 
   const getOrdinal = (n) => {
