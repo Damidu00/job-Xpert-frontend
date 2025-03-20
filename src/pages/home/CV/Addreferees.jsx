@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default function AddReferees({ onClose }) {
   // State variables for referees
@@ -27,11 +28,26 @@ export default function AddReferees({ onClose }) {
 
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/referees/`, payload);
-      alert('Referees added successfully!');
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Referees added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
       onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Error submitting referees:', error);
-      alert('Failed to add referees.');
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add referees. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function AddAboutMe({ onClose }) {
   // State variables for form fields
@@ -50,7 +51,13 @@ export default function AddAboutMe({ onClose }) {
       .then((res)=>{
         onClose();
         console.log(res.data);
-        //alert('Details added successfully!'); 
+         
+      })
+      Swal.fire({
+        title: 'Success!',
+        text: 'Details added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
       })
     } catch (error) {
       console.error(error);

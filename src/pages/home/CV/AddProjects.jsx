@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
 
 export default function AddProjects({ onClose }) {
@@ -36,11 +37,26 @@ export default function AddProjects({ onClose }) {
 
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/projects/`, postData);
-      alert('Projects added successfully!');
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Projects added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
       onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Error adding projects:', error.response ? error.response.data : error.message);
-      alert('Failed to add projects.');
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add projects. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 

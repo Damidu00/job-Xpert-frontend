@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaCheck } from 'react-icons/fa'; // Import both icons
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import AddAboutMe from './AddAboutMe'; // Import the AddAboutMe component
-import AddSkills from './AddSkills'; // Import the AddSkills component
+import AddAboutMe from './AddAboutMe';
+import AddSkills from './AddSkills';
 import AddCertifications from './AddCertifications';
 import AddReferees from './Addreferees';
 import AddEducation from './AddEducation';
@@ -14,14 +14,32 @@ export default function AddCVDetails() {
   const [openDialog, setOpenDialog] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(null);
 
+  // State to track the completion status of each section
+  const [completionStatus, setCompletionStatus] = useState({
+    aboutMe: false,
+    skills: false,
+    certifications: false,
+    referees: false,
+    education: false,
+    experience: false,
+    projects: false,
+  });
+
   // Function to open the dialog and set the component to render
-  const handleOpenDialog = (component) => {
-    setCurrentComponent(component); // Set the component to render
+  const handleOpenDialog = (componentName, component) => {
+    setCurrentComponent({ name: componentName, component }); // Set the component and its name
     setOpenDialog(true); // Open the dialog
   };
 
-  // Function to close the dialog
-  const handleCloseDialog = () => {
+  // Function to close the dialog and mark the section as completed
+  const handleCloseDialog = (sectionName) => {
+    if (sectionName) {
+      // Mark the section as completed
+      setCompletionStatus((prevStatus) => ({
+        ...prevStatus,
+        [sectionName]: true,
+      }));
+    }
     setCurrentComponent(null); // Reset the component
     setOpenDialog(false); // Close the dialog
   };
@@ -35,75 +53,105 @@ export default function AddCVDetails() {
         {/* Add About Me */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddAboutMe onClose={handleCloseDialog} />)}
+          onClick={() => handleOpenDialog('aboutMe', <AddAboutMe onClose={() => handleCloseDialog('aboutMe')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add About Me</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.aboutMe ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Skills */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddSkills onClose={handleCloseDialog} />)}
+          onClick={() => handleOpenDialog('skills', <AddSkills onClose={() => handleCloseDialog('skills')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add Skills</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.skills ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Certificates */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddCertifications onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() =>
+            handleOpenDialog('certifications', <AddCertifications onClose={() => handleCloseDialog('certifications')} />)
+          }
         >
           <span className="text-lg font-medium text-gray-700">Add Certificates</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.certifications ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Referees */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddReferees onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() => handleOpenDialog('referees', <AddReferees onClose={() => handleCloseDialog('referees')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add Referees</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.referees ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Education */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddEducation onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() => handleOpenDialog('education', <AddEducation onClose={() => handleCloseDialog('education')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add Education</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.education ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Experiences */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddExperience onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() => handleOpenDialog('experience', <AddExperience onClose={() => handleCloseDialog('experience')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add Experiences</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.experience ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
 
         {/* Add Projects */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddProjects onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() => handleOpenDialog('projects', <AddProjects onClose={() => handleCloseDialog('projects')} />)}
         >
           <span className="text-lg font-medium text-gray-700">Add Projects</span>
-          <FaPlus className="text-xl text-blue-500" />
+          {completionStatus.projects ? (
+            <FaCheck className="text-xl text-green-500" />
+          ) : (
+            <FaPlus className="text-xl text-blue-500" />
+          )}
         </div>
       </div>
 
       {/* MUI Dialog Box */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle className="text-2xl font-bold text-gray-800">
-          {currentComponent?.type.name || 'Add Details'}
+          {currentComponent?.name || 'Add Details'}
         </DialogTitle>
         <DialogContent>
           {/* Render the selected component inside the dialog */}
-          {currentComponent}
+          {currentComponent?.component}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">

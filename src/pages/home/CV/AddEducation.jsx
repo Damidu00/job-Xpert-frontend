@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
 
 export default function AddEducation({ onClose }) {
@@ -34,11 +35,26 @@ export default function AddEducation({ onClose }) {
         cvId,
         details: education
       });
-      alert('Education details saved successfully!');
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Education details saved successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
       onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Error saving education details:', error);
-      alert('Failed to save education details!');
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to save education details. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 

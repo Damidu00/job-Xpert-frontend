@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
 
 export default function AddCertifications({ onClose }) {
@@ -34,11 +35,26 @@ export default function AddCertifications({ onClose }) {
 
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/certificates/`, postData);
-      alert('Certificates added successfully!');
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Certificates added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
       onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to add certificates');
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add certificates. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 

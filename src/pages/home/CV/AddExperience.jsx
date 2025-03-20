@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
 
 export default function AddExperience({ onClose }) {
@@ -36,11 +37,26 @@ export default function AddExperience({ onClose }) {
 
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/experience/`, postData);
-      alert('Experience added successfully!');
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Experience added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
       onClose(); // Close the dialog after successful submission
     } catch (error) {
       console.error('Error adding experience:', error.response ? error.response.data : error.message);
-      alert('Failed to add experience.');
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add experience. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
