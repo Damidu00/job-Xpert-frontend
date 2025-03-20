@@ -4,6 +4,10 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import AddAboutMe from './AddAboutMe'; // Import the AddAboutMe component
 import AddSkills from './AddSkills'; // Import the AddSkills component
 import AddCertifications from './AddCertifications';
+import AddReferees from './Addreferees';
+import AddEducation from './AddEducation';
+import AddExperience from './AddExperience';
+import AddProjects from './AddProjects';
 
 export default function AddCVDetails() {
   // State to manage the visibility of the dialog and the current component to render
@@ -76,7 +80,7 @@ export default function AddCVDetails() {
         {/* Add Experiences */}
         <div
           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-300"
-          onClick={() => handleOpenDialog(<AddExperiences onClose={handleCloseDialog} />)} // Replace with actual component
+          onClick={() => handleOpenDialog(<AddExperience onClose={handleCloseDialog} />)} // Replace with actual component
         >
           <span className="text-lg font-medium text-gray-700">Add Experiences</span>
           <FaPlus className="text-xl text-blue-500" />
