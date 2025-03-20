@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { CiCirclePlus } from "react-icons/ci";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2'; // Import SweetAlert2
+import { CiCirclePlus } from 'react-icons/ci';
 
-export default function AddProjects() {
-  const navigate = useNavigate()
+export default function AddProjects({ onClose }) {
+  // State variables for project details
   const [projects, setProjects] = useState([
-    { title: "", description: "", githubLink: "", liveDemo: "", techStack: "" },
+    { title: '', description: '', githubLink: '', liveDemo: '', techStack: '' },
   ]);
 
+  // Handle input changes
   const handleFormChange = (event, index) => {
     const { name, value } = event.target;
     const newProjects = [...projects];
@@ -16,120 +17,131 @@ export default function AddProjects() {
     setProjects(newProjects);
   };
 
+  // Add a new project field
   const addFields = () => {
     setProjects([
       ...projects,
-      { title: "", description: "", githubLink: "", liveDemo: "", techStack: "" },
+      { title: '', description: '', githubLink: '', liveDemo: '', techStack: '' },
     ]);
   };
 
-
-  const submit = async (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const postData = {
-      userId : "test1",
-      cvId : 'cv01',
-      projects: projects
-    }  
+      userId: 'test1',
+      cvId: 'cv01',
+      projects: projects,
+    };
 
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/projects/`,postData).then((res)=>{
-        console.log(res.data)
-        alert("Projects added successfully!");
-        navigate("/cvdashboard")
-      })
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/projects/`, postData);
 
-      
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Projects added successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      onClose(); // Close the dialog after successful submission
     } catch (error) {
-      console.error("Error adding projects:", error.response ? error.response.data : error.message);
-      alert("Failed to add projects.");
+      console.error('Error adding projects:', error.response ? error.response.data : error.message);
+
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to add projects. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
+  // Helper function to get ordinal numbers
   const getOrdinal = (n) => {
-    const suffixes = ["th", "st", "nd", "rd"];
+    const suffixes = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
     return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
   };
 
   return (
-    <div className="bg-gray-100 h-full w-full flex justify-center items-center">
-      <div className="w-[900px] mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
-        <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Add Your Projects</h2>
-        <form className="space-y-4" >
-          {projects.map((project, index) => (
-            <div key={index} className="border p-4 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                {getOrdinal(index + 1)} Project Details
-              </h3>
-              <input
-                type="text"
-                name="title"
-                placeholder="Project Title *"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200"
-                value={project.title}
-                onChange={(event) => handleFormChange(event, index)}
-                required
-              />
-              <textarea
-                name="description"
-                placeholder="Project Description *"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200 mt-2"
-                value={project.description}
-                onChange={(event) => handleFormChange(event, index)}
-                required
-              ></textarea>
-              <input
-                type="text"
-                name="githubLink"
-                placeholder="GitHub Link *"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200 mt-2"
-                value={project.githubLink}
-                onChange={(event) => handleFormChange(event, index)}
-                required
-              />
-              <input
-                type="text"
-                name="liveDemo"
-                placeholder="Live Demo (Optional)"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200 mt-2"
-                value={project.liveDemo}
-                onChange={(event) => handleFormChange(event, index)}
-              />
-              <input
-                type="text"
-                name="techStack"
-                placeholder="Tech Stack (Comma Separated)"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-gray-200 mt-2"
-                value={project.techStack}
-                onChange={(event) => handleFormChange(event, index)}
-              />
-            </div>
-          ))}
-          <div className="flex justify-end">
-            <CiCirclePlus
-              className="bg-gray-200 text-5xl rounded-full m-2 hover:bg-gray-50 text-blue-300 hover:text-blue-700 hover:scale-110"
-              onClick={addFields}
-            />
-          </div>
-        </form>
-        <div className="grid grid-cols-2 gap-4">
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
-            onClick={submit}
-          >
-            Add to CV
-          </button>
-          <button
-            type="button"
-            className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold hover:bg-gray-500 transition duration-300"
-          >
-            Cancel
-          </button>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Render project fields */}
+      {projects.map((project, index) => (
+        <div key={index} className="border p-4 rounded-lg shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">{getOrdinal(index + 1)} Project Details</h3>
+          <input
+            type="text"
+            name="title"
+            placeholder="Project Title *"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            value={project.title}
+            onChange={(event) => handleFormChange(event, index)}
+            required
+          />
+          <textarea
+            name="description"
+            placeholder="Project Description *"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mt-2 h-28 resize-none"
+            value={project.description}
+            onChange={(event) => handleFormChange(event, index)}
+            required
+          ></textarea>
+          <input
+            type="text"
+            name="githubLink"
+            placeholder="GitHub Link *"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mt-2"
+            value={project.githubLink}
+            onChange={(event) => handleFormChange(event, index)}
+            required
+          />
+          <input
+            type="text"
+            name="liveDemo"
+            placeholder="Live Demo (Optional)"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mt-2"
+            value={project.liveDemo}
+            onChange={(event) => handleFormChange(event, index)}
+          />
+          <input
+            type="text"
+            name="techStack"
+            placeholder="Tech Stack (Comma Separated)"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mt-2"
+            value={project.techStack}
+            onChange={(event) => handleFormChange(event, index)}
+          />
         </div>
+      ))}
+
+      {/* Add New Project Button */}
+      <div className="flex justify-end">
+        <CiCirclePlus
+          className="bg-gray-200 text-5xl rounded-full m-2 hover:bg-gray-50 text-blue-300 hover:text-blue-700 hover:scale-110 cursor-pointer"
+          onClick={addFields}
+        />
       </div>
-    </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end space-x-4">
+        <button
+          type="button"
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300"
+          onClick={onClose} // Close the dialog on cancel
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          Save
+        </button>
+      </div>
+    </form>
   );
 }
