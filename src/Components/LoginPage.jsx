@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { setAuthToken } from "../auth"; // Import auth functions
 
 export default function SignInForm() {
     const [formData, setFormData] = useState({
@@ -9,60 +12,108 @@ export default function SignInForm() {
         role: "user",
     });
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Sign In Data:", formData);
+
+        try {
+            console.log("Submitting login request...");
+            const res = await axios.post(
+                import.meta.env.VITE_BACKEND_URL + `/api/users/login`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            console.log("Login Response:", res.data);
+
+            if (res.data.status === "success") {
+                toast.success("Login succsessfully ");
+
+                // Store the token in local storage
+                if (res.data.status === "success") {
+                    const token = res.data.data.access_token; // Extract token
+                    setAuthToken(token); // Store it in local storage
+                
+                    console.log("Token stored:", localStorage.getItem("access_token")); // Debugging
+                }
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            toast.error(error.response?.data?.message || "An error occurred.");
+        }
+
+        const token = localStorage.getItem("access_token")
+        console.log("Token Is"+token)
     };
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100 p-5">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                {/* Sign In Title */}
                 <h2 className="text-blue-500 text-4xl font-bold text-center mb-6">Sign In</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Email */}
                     <div>
                         <label className="block font-bold text-sm text-black mb-2">Email</label>
-                        <input type="email" name="email" required className="w-full p-2 border rounded" onChange={handleChange} />
-                    </div>
-                    
-                    {/* Password */}
-                    <div>
-                        <label className="block font-bold text-sm text-black mb-2">Password</label>
-                        <input type="password" name="password" required className="w-full p-2 border rounded" onChange={handleChange} />
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            className="w-full p-2 border rounded"
+                            onChange={handleChange}
+                        />
                     </div>
 
-                    {/* Role Selection */}
+                    <div>
+                        <label className="block font-bold text-sm text-black mb-2">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            required
+                            className="w-full p-2 border rounded"
+                            onChange={handleChange}
+                        />
+                    </div>
+
                     <div>
                         <label className="block font-bold text-sm text-black mb-2">Role</label>
                         <div className="flex space-x-3">
-                            {['admin', 'user', 'company'].map((role) => (
+                            {["admin", "user", "company"].map((role) => (
                                 <label key={role} className="flex items-center text-sm font-bold text-black">
-                                    <input type="radio" name="role" value={role} checked={formData.role === role} onChange={handleChange} className="mr-2" />
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value={role}
+                                        checked={formData.role === role}
+                                        onChange={handleChange}
+                                        className="mr-2"
+                                    />
                                     {role.charAt(0).toUpperCase() + role.slice(1)}
                                 </label>
                             ))}
                         </div>
                     </div>
 
-                    {/* Sign In Button */}
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">
                         Sign In
-                    </button> 
+                    </button>
 
-                    {/* Google Sign-In Button */}
                     <button type="button" className="w-full flex items-center justify-center border py-2 rounded hover:bg-gray-200">
                         <FcGoogle className="mr-2 text-xl" />
                         Sign in with Google
                     </button>
 
-                    {/* Sign Up Link */}
                     <p className="text-center text-sm">
                         Don't have an account? <Link to="/signup" className="text-blue-600 font-bold">Sign Up</Link>
                     </p>
@@ -71,3 +122,7 @@ export default function SignInForm() {
         </div>
     );
 }
+
+
+
+

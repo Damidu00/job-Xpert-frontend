@@ -6,6 +6,7 @@ import HomePage from './pages/home/homepage';
 import AdminHomePage from './pages/admin/adminHomePage';
 import LoginPage from './Components/LoginPage';
 import SignupPage from './Components/SignupPage';
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
@@ -14,6 +15,10 @@ function App() {
   return (
     <>
       <BrowserRouter>
+      <Toaster
+            position="top-center"
+            reverseOrder={false}
+      />
         <Routes path='/*'>
           <Route path='/*' element={<HomePage/>}/>
           <Route path='/admin/*' element={<AdminHomePage/>}/>
