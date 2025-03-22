@@ -6,6 +6,8 @@ import HomePage from './pages/home/homepage';
 import AdminHomePage from './pages/admin/adminHomePage';
 import LoginPage from './Components/LoginPage';
 import SignupPage from './Components/SignupPage';
+import Companies from './pages/admin/Companies';
+import CompanyCreate from './pages/admin/CompanyCreate';
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
           <Route path='/cvdashboard' element={<Dashboard/>}/>
+          <Route path='/companies' element={<Companies/>}/>
+          <Route path='/create' element={<CompanyCreate/>}/>
         </Routes>
       </BrowserRouter>
     </>
