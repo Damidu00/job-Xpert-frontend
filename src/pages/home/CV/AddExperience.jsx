@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
 import { useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function AddExperience({ onClose }) {
   const location = useLocation();
@@ -18,7 +19,7 @@ export default function AddExperience({ onClose }) {
     const { name, value } = event.target;
     const newExperiences = [...experiences];
 
- 
+  
     if (name === 'description' && value.length > 250) {
       return; 
     }
@@ -46,15 +47,18 @@ export default function AddExperience({ onClose }) {
     };
 
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/experience/`, postData);
-
-      // Use SweetAlert2 for success message
-      Swal.fire({
-        title: 'Success!',
-        text: 'Experience added successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/experience/`, postData)
+      .then((res)=>{
+        console.log(res.data)
+        Swal.fire({
+          title: 'Success!',
+          text: 'Experience added successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      }).catch((res)=>{
+        toast.error("error to add data")
+      })
 
       onClose(); // Close the dialog after successful submission
     } catch (error) {
@@ -138,13 +142,6 @@ export default function AddExperience({ onClose }) {
 
       {/* Action Buttons */}
       <div className="flex justify-end space-x-4">
-        <button
-          type="button"
-          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300"
-          onClick={onClose} // Close the dialog on cancel
-        >
-          Cancel
-        </button>
         <button
           type="submit"
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
