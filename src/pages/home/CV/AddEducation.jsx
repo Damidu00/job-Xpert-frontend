@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
+import { useLocation } from 'react-router-dom';
 
 export default function AddEducation({ onClose }) {
+  const location = useLocation()
+  const userId = location.state.userId
   // State variables for education details
   const [education, setEducation] = useState([
     { eduLevel: '', school: '', degree: '', startDate: '', endDate: '', description: '' },
@@ -26,8 +29,7 @@ export default function AddEducation({ onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = "12345";
-    const cvId = "67890";
+    const cvId = "cv02";
 
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/education/`, {

@@ -1,13 +1,24 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { FaSpinner, FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaBriefcase, FaCode, FaCertificate, FaUserCheck, FaProjectDiagram } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 export default function CV() {
+  const location = useLocation();
   const [cvLoading, setCvLoading] = useState('loading');
   const [cvData, setCvData] = useState(null);
 
+  const userId = location.state?.userId; // Safely extract userId
+  console.log(userId);
+
   useEffect(() => {
     const fetchData = async () => {
+      if (!userId) {
+        console.error("User ID is missing from navigation state.");
+        setCvLoading('error');
+        return;
+      }
+
       try {
         const [
           cvUserRes,
@@ -18,13 +29,13 @@ export default function CV() {
           experienceRes,
           projectsRes
         ] = await Promise.all([
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/test2`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/skills/test1`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/certificates/test1`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/referees/12345`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/education/12345`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/experience/test1`),
-          axios.get(import.meta.env.VITE_BACKEND_URL + `/api/projects/test1`)
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/cvuser/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/skills/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/certificates/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/referees/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/education/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/experience/${userId}`),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/projects/${userId}`)
         ]);
 
         // Extract relevant data
@@ -54,7 +65,7 @@ export default function CV() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   if (cvLoading === 'loading') {
     return (

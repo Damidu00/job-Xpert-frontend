@@ -1,8 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export default function AddAboutMe({ onClose }) {
+  const location = useLocation()
+  const userId = location.state?.userId
+  
+  console.log("userId " + userId)
   // State variables for form fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -32,7 +37,7 @@ export default function AddAboutMe({ onClose }) {
     e.preventDefault(); // Prevent default form submission behavior
 
     const details = {
-      userId: 'test2',
+      userId,
       cvId: 'cv02',
       firstName,
       lastName,

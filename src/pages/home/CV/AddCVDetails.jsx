@@ -8,9 +8,14 @@ import AddReferees from './Addreferees';
 import AddEducation from './AddEducation';
 import AddExperience from './AddExperience';
 import AddProjects from './AddProjects';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function AddCVDetails() {
+  const location = useLocation()
+  const userId = location.state.userId
+  const username = location.state.username
+  console.log(userId)
+  console.log(username)
   const navigate = useNavigate()
   // State to manage the visibility of the dialog and the current component to render
   const [openDialog, setOpenDialog] = useState(false);
@@ -46,9 +51,9 @@ export default function AddCVDetails() {
     setOpenDialog(false); // Close the dialog
   };
 
-  const handleContinue = ()=>{
-    navigate("/selecttemplate")
-  }
+  const handleContinue = () => {
+    navigate("/selecttemplate", { state: { userId: userId, username: username } });
+  };
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">

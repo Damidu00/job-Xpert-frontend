@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
+import { useLocation } from 'react-router-dom';
 
 export default function AddExperience({ onClose }) {
+  const location = useLocation()
+  const userId = location.state.userId
   // State variables for experience details
   const [experiences, setExperiences] = useState([
     { company: '', jobTitle: '', startDate: '', endDate: '', description: '' },
@@ -30,8 +33,8 @@ export default function AddExperience({ onClose }) {
     e.preventDefault();
 
     const postData = {
-      userId: "test1",
-      cvId: "cv01",
+      userId,
+      cvId: "cv02",
       experiences: experiences,
     };
 
