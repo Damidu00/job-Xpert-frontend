@@ -69,7 +69,7 @@ export default function CV() {
   const { user, skills, education, experience } = cvData;
 
   return (
-    <div className="bg-white min-h-screen flex justify-center items-center">
+    <div className="bg-white min-h-screen flex justify-center items-center ">
       {/* A4 Page Container */}
       <div className="w-[210mm] h-[297mm] bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Header and Profile Section with Light Cream Background */}
@@ -83,8 +83,8 @@ export default function CV() {
           {/* Horizontal Rule */}
           <div className="relative mb-4">
             <hr className="border-t-2 border-gray-300" />
-            <div className="absolute top-[-10px] left-0 w-10 h-1 bg-gray-800"></div>
-            <div className="absolute top-[-10px] right-0 w-10 h-1 bg-gray-800"></div>
+            <div className="absolute top-[-5px] left-0 w-10 h-1 bg-gray-800"></div>
+            <div className="absolute top-[-5px] right-0 w-10 h-1 bg-gray-800"></div>
           </div>
 
           {/* Grid Layout for Contact Info and Profile */}
@@ -123,9 +123,12 @@ export default function CV() {
         </div>
 
         {/* Two-Column Layout Below Profile Section */}
-        <div className="grid grid-cols-2 gap-8 p-8">
+        <div className="grid grid-cols-2 gap-8 p-8 relative">
+          {/* Divider Line Between Columns */}
+          <div className="absolute -top-52 bottom-0 left-1/2 w-[1px] bg-gray-300"></div>
+
           {/* Left Column: Skills & Education */}
-          <div>
+          <div className="pr-4">
             {/* Skills */}
             <section className="mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">SKILLS</h2>
@@ -153,7 +156,7 @@ export default function CV() {
           </div>
 
           {/* Right Column: Experience */}
-          <div>
+          <div className="pl-4">
             <section>
               <h2 className="text-xl font-bold text-gray-800 mb-2">EXPERIENCE</h2>
               <ul className="space-y-4">

@@ -5,8 +5,9 @@ import { CiCirclePlus } from 'react-icons/ci';
 import { useLocation } from 'react-router-dom';
 
 export default function AddExperience({ onClose }) {
-  const location = useLocation()
-  const userId = location.state.userId
+  const location = useLocation();
+  const userId = location.state.userId;
+
   // State variables for experience details
   const [experiences, setExperiences] = useState([
     { company: '', jobTitle: '', startDate: '', endDate: '', description: '' },
@@ -16,6 +17,12 @@ export default function AddExperience({ onClose }) {
   const handleFormChange = (event, index) => {
     const { name, value } = event.target;
     const newExperiences = [...experiences];
+
+ 
+    if (name === 'description' && value.length > 250) {
+      return; 
+    }
+
     newExperiences[index][name] = value;
     setExperiences(newExperiences);
   };
@@ -112,11 +119,12 @@ export default function AddExperience({ onClose }) {
           </div>
           <textarea
             name="description"
-            placeholder="Description (optional)"
+            placeholder="Description (max 250 characters)"
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 mt-2 h-28 resize-none"
             value={experience.description}
             onChange={(event) => handleFormChange(event, index)}
           ></textarea>
+          <p className="text-sm text-gray-500">{experience.description.length}/250 characters</p>
         </div>
       ))}
 
