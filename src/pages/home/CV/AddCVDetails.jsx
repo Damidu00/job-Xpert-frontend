@@ -8,8 +8,15 @@ import AddReferees from './Addreferees';
 import AddEducation from './AddEducation';
 import AddExperience from './AddExperience';
 import AddProjects from './AddProjects';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function AddCVDetails() {
+  const location = useLocation()
+  const userId = location.state.userId
+  const username = location.state.username
+  console.log(userId)
+  console.log(username)
+  const navigate = useNavigate()
   // State to manage the visibility of the dialog and the current component to render
   const [openDialog, setOpenDialog] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(null);
@@ -42,6 +49,10 @@ export default function AddCVDetails() {
     }
     setCurrentComponent(null); // Reset the component
     setOpenDialog(false); // Close the dialog
+  };
+
+  const handleContinue = () => {
+    navigate("/selecttemplate", { state: { userId: userId, username: username } });
   };
 
   return (
@@ -159,6 +170,10 @@ export default function AddCVDetails() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <button className='p-2 bg-blue-500 text-white rounded-2xl hover:bg-blue-700'
+      onClick={handleContinue}
+      >Continue</button>
     </div>
   );
 }

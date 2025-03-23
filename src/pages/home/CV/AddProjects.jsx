@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
+import { useLocation } from 'react-router-dom';
 
 export default function AddProjects({ onClose }) {
+  const location = useLocation()
+  const userId = location.state.userId
   // State variables for project details
   const [projects, setProjects] = useState([
     { title: '', description: '', githubLink: '', liveDemo: '', techStack: '' },
@@ -30,8 +33,8 @@ export default function AddProjects({ onClose }) {
     e.preventDefault();
 
     const postData = {
-      userId: 'test1',
-      cvId: 'cv01',
+      userId,
+      cvId: 'cv02',
       projects: projects,
     };
 
