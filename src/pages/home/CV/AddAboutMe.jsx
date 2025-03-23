@@ -1,7 +1,8 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function AddAboutMe({ onClose }) {
   const location = useLocation();
@@ -10,17 +11,20 @@ export default function AddAboutMe({ onClose }) {
   console.log("userId " + userId);
 
   // State variables for form fields
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [linkedinUrl, setLinkedinUrl] = useState('');
-  const [githubUrl, setGithubUrl] = useState('');
-  const [address, setAddress] = useState('');
-  const [bio, setBio] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [githubUrl, setGithubUrl] = useState("");
+  const [address, setAddress] = useState("");
+  const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
 
-  // Function to validate name fields (disallow numbers)
+  // Error states for URL validation
+  const [linkedinError, setLinkedinError] = useState("");
+  const [githubError, setGithubError] = useState("");
+
   const validateName = (value) => {
     return /^[a-zA-Z\s]*$/.test(value); // Only allow alphabets and spaces
   };
@@ -30,13 +34,41 @@ export default function AddAboutMe({ onClose }) {
     return /^[0-9]*$/.test(value); // Only allow numeric characters
   };
 
+  // Function to validate URL
+  const validateUrl = (url) => {
+    try {
+      new URL(url); // Use the URL constructor to validate
+      return true;
+    } catch (e) {
+      return false; // Invalid URL
+    }
+  };
+
   // Function to handle form submission
   async function handleSubmit(e) {
     e.preventDefault(); // Prevent default form submission behavior
 
+    // Validate LinkedIn and GitHub URLs before submission
+    let isValid = true;
+    if (!validateUrl(linkedinUrl)) {
+      setLinkedinError("Please enter a valid LinkedIn URL");
+      isValid = false;
+    } else {
+      setLinkedinError("");
+    }
+
+    if (!validateUrl(githubUrl)) {
+      setGithubError("Please enter a valid GitHub URL");
+      isValid = false;
+    } else {
+      setGithubError("");
+    }
+
+    if (!isValid) return; // Stop submission if validation fails
+
     const details = {
       userId,
-      cvId: 'cv02',
+      cvId: "cv02",
       firstName,
       lastName,
       email,
@@ -50,19 +82,24 @@ export default function AddAboutMe({ onClose }) {
     console.log(details);
 
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/`, details).then((res) => {
-        onClose();
-        console.log(res.data);
-      });
-      Swal.fire({
-        title: 'Success!',
-        text: 'Details added successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
+      await axios
+        .post(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/`, details)
+        .then((res) => {
+          onClose();
+          console.log(res.data);
+          Swal.fire({
+            title: "Success!",
+            text: "Details added successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        })
+        .catch((res) => {
+          toast.error("Error to add user details");
+        });
     } catch (error) {
       console.error(error);
-      alert('Failed to add details. Please try again.');
+      alert("Failed to add details. Please try again.");
     }
   }
 
@@ -125,20 +162,46 @@ export default function AddAboutMe({ onClose }) {
 
       {/* LinkedIn URL and GitHub URL */}
       <div className="grid grid-cols-2 gap-4">
-        <input
-          type="text"
-          name="linkedinURL"
-          placeholder="LinkedIn URL"
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          onChange={(e) => setLinkedinUrl(e.target.value)}
-        />
-        <input
-          type="text"
-          name="githubURL"
-          placeholder="GitHub URL"
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          onChange={(e) => setGithubUrl(e.target.value)}
-        />
+        <div>
+          <input
+            type="text"
+            name="linkedinURL"
+            placeholder="LinkedIn URL"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            value={linkedinUrl}
+            onChange={(e) => {
+              setLinkedinUrl(e.target.value);
+              if (!validateUrl(e.target.value)) {
+                setLinkedinError("Please enter a valid LinkedIn URL");
+              } else {
+                setLinkedinError("");
+              }
+            }}
+          />
+          {linkedinError && (
+            <p className="text-red-500 text-sm mt-1">{linkedinError}</p>
+          )}
+        </div>
+        <div>
+          <input
+            type="text"
+            name="githubURL"
+            placeholder="GitHub URL"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            value={githubUrl}
+            onChange={(e) => {
+              setGithubUrl(e.target.value);
+              if (!validateUrl(e.target.value)) {
+                setGithubError("Please enter a valid GitHub URL");
+              } else {
+                setGithubError("");
+              }
+            }}
+          />
+          {githubError && (
+            <p className="text-red-500 text-sm mt-1">{githubError}</p>
+          )}
+        </div>
       </div>
 
       {/* Address */}
@@ -154,7 +217,7 @@ export default function AddAboutMe({ onClose }) {
       {/* Short Bio */}
       <textarea
         name="shortBio"
-        placeholder="Short Bio (max 300 characters)"
+        placeholder="Short Bio (max 250 characters)"
         className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 h-28 resize-none"
         required
         value={bio}
@@ -164,7 +227,7 @@ export default function AddAboutMe({ onClose }) {
           }
         }}
       ></textarea>
-      <p className="text-sm text-gray-500">{bio.length}/300 characters</p>
+      <p className="text-sm text-gray-500">{bio.length}/250 characters</p>
 
       {/* Profile Photo */}
       <input
