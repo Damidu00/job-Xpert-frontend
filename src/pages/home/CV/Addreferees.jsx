@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default function AddReferees({ onClose }) {
+  const location = useLocation()
+  const userId = location.state.userId
   // State variables for referees
   const [referees, setReferees] = useState([
     { refType: 'male', FirstName: '', LastName: '', position: '', workingPlace: '', location: '', phone: '' },
@@ -21,8 +24,8 @@ export default function AddReferees({ onClose }) {
     e.preventDefault();
 
     const payload = {
-      userId: "12345",
-      cvId: "67890",
+      userId,
+      cvId: "cv02",
       referees: referees
     };
 
