@@ -4,10 +4,11 @@ import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export default function AddAboutMe({ onClose }) {
-  const location = useLocation()
-  const userId = location.state?.userId
-  
-  console.log("userId " + userId)
+  const location = useLocation();
+  const userId = location.state?.userId;
+
+  console.log("userId " + userId);
+
   // State variables for form fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -19,18 +20,15 @@ export default function AddAboutMe({ onClose }) {
   const [bio, setBio] = useState('');
   const [image, setImage] = useState(null);
 
+  // Function to validate name fields (disallow numbers)
+  const validateName = (value) => {
+    return /^[a-zA-Z\s]*$/.test(value); // Only allow alphabets and spaces
+  };
 
-    const [isOpen, setOpen] = useState(false);
-  
-    // Function to open the dialog
-    // const handleOpenDialog = () => {
-    //   setOpenDialog(true);
-    // };
-  
-    // Function to close the dialog
-    // const handleCloseDialog = () => {
-    //   setOpenDialog(false);
-    // };
+  // Function to validate phone number field (only numbers)
+  const validatePhoneNumber = (value) => {
+    return /^[0-9]*$/.test(value); // Only allow numeric characters
+  };
 
   // Function to handle form submission
   async function handleSubmit(e) {
@@ -52,18 +50,16 @@ export default function AddAboutMe({ onClose }) {
     console.log(details);
 
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/`,details)
-      .then((res)=>{
+      await axios.post(import.meta.env.VITE_BACKEND_URL + `/api/cvuser/`, details).then((res) => {
         onClose();
         console.log(res.data);
-         
-      })
+      });
       Swal.fire({
         title: 'Success!',
         text: 'Details added successfully!',
         icon: 'success',
-        confirmButtonText: 'OK'
-      })
+        confirmButtonText: 'OK',
+      });
     } catch (error) {
       console.error(error);
       alert('Failed to add details. Please try again.');
@@ -80,7 +76,12 @@ export default function AddAboutMe({ onClose }) {
           placeholder="First Name"
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           required
-          onChange={(e) => setFirstName(e.target.value)}
+          value={firstName}
+          onChange={(e) => {
+            if (validateName(e.target.value)) {
+              setFirstName(e.target.value);
+            }
+          }}
         />
         <input
           type="text"
@@ -88,7 +89,12 @@ export default function AddAboutMe({ onClose }) {
           placeholder="Last Name"
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           required
-          onChange={(e) => setLastName(e.target.value)}
+          value={lastName}
+          onChange={(e) => {
+            if (validateName(e.target.value)) {
+              setLastName(e.target.value);
+            }
+          }}
         />
       </div>
 
@@ -108,7 +114,12 @@ export default function AddAboutMe({ onClose }) {
           placeholder="Phone Number"
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           required
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          value={phoneNumber}
+          onChange={(e) => {
+            if (validatePhoneNumber(e.target.value)) {
+              setPhoneNumber(e.target.value);
+            }
+          }}
         />
       </div>
 
@@ -143,11 +154,17 @@ export default function AddAboutMe({ onClose }) {
       {/* Short Bio */}
       <textarea
         name="shortBio"
-        placeholder="Short Bio"
+        placeholder="Short Bio (max 300 characters)"
         className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 h-28 resize-none"
         required
-        onChange={(e) => setBio(e.target.value)}
+        value={bio}
+        onChange={(e) => {
+          if (e.target.value.length <= 250) {
+            setBio(e.target.value);
+          }
+        }}
       ></textarea>
+      <p className="text-sm text-gray-500">{bio.length}/300 characters</p>
 
       {/* Profile Photo */}
       <input
@@ -160,7 +177,6 @@ export default function AddAboutMe({ onClose }) {
 
       {/* Action Buttons */}
       <div className="flex justify-end space-x-4">
-
         <button
           type="submit"
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
