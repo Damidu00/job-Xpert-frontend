@@ -13,19 +13,22 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <BrowserRouter>
-      <Toaster position="top-center" reverseOrder={false} />
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/admin/*' element={<AdminHomePage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/cv-dashboard' element={<Dashboard />} />
-        
-        <Route path='/profile' element={<Profile />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <>
+      <BrowserRouter>
+      <Toaster
+            position="top-center"
+            reverseOrder={false}
+      />
+        <Routes path='/*'>
+          <Route path='/*' element={<HomePage/>}/>
+          <Route path='/admin/*' element={<AdminHomePage/>}/>
+          <Route path='/login' element={<LoginPage/>}/>
+          <Route path='/signup' element={<SignupPage/>}/>
+          <Route path='/cv-dashboard' element={<Dashboard/>}/>
+        </Routes>
+      </BrowserRouter>
+    </>
+  )
 }
 
 export default App;
