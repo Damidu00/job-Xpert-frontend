@@ -21,9 +21,6 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/cv-dashboard' element={<Dashboard />} />
-
-
-
         
         <Route path='/profile' element={<Profile />} />
       </Routes>
