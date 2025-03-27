@@ -332,7 +332,7 @@ const Profile = () => {
 
         {/* Skills */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold">Skills</h2>
+          <h2 className="text-lg font-bold">Skills</h2>
           <div className="flex flex-wrap gap-2 mt-2">
             {user.profile.skills?.length > 0 ? (
               user.profile.skills.map((skill, index) => (
@@ -351,7 +351,7 @@ const Profile = () => {
 
         {/* Resume */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold">Resume</h2>
+          <h2 className="text-lg font-bold">Resume</h2>
           {user.profile.resume ? (
             <a
               href={user.profile.resume}
