@@ -86,139 +86,154 @@
 // export default UserDetails;
 
 //  Delete a user by ID
-  // const handleDeleteAccount = async () => {
-  //   if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+//   const handleDeleteAccount = async () => {
+//     if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+//       return;
+//     }
+
+//     try {
+//       const token = localStorage.getItem('access_token');
+//       await axios.delete('http://localhost:5000/api/users/delete', {
+//         headers: { Authorization: `Bearer ${token}` },
+//         withCredentials: true,
+//       });
+
+//       localStorage.removeItem('access_token');
+//       window.location.href = '/userDetails';
+//     } catch (error) {
+//       console.error('Error deleting account:', error.response?.data?.message || error.message);
+//     }
+//   };
+
+
+
+
+  // Delete a user by ID
+  // const handleDeleteAccount = async (userId) => {
+  //   if (!window.confirm("Are you sure you want to delete this account? This action cannot be undone.")) {
   //     return;
   //   }
-
+  
   //   try {
-  //     const token = localStorage.getItem('access_token');
-  //     await axios.delete('http://localhost:5000/api/users/delete', {
+  //     const token = localStorage.getItem("access_token");
+  //     if (!token) {
+  //       alert("Authorization token is missing. Please log in again.");
+  //       return;
+  //     }
+  
+  //     // Corrected API endpoint (backend should have "/delete/:id" route)
+  //     const response = await axios.delete(`http://localhost:5000/api/users/delete/${userId}`, {
   //       headers: { Authorization: `Bearer ${token}` },
   //       withCredentials: true,
   //     });
-
-  //     localStorage.removeItem('access_token');
-  //     window.location.href = '/userDetails';
+  
+  //     if (response.status === 200) {
+  //       // Update state to remove deleted user without page reload
+  //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
+  //     } else {
+  //       alert("Failed to delete user. Try again.");
+  //     }
   //   } catch (error) {
-  //     console.error('Error deleting account:', error.response?.data?.message || error.message);
+  //     console.error("Error deleting account:", error.response?.data?.message || error.message);
+  //     alert("Error deleting user. Check console for details.");
   //   }
   // };
 
 
 
-
-
   import React, { useEffect, useState } from "react";
-  import axios from "axios";
-  import { Button } from "@mui/material";
-  
-  const UserDetails = () => {
-    const [users, setUsers] = useState([]);
-  
-    // Fetch all users on component mount
-    useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          const token = localStorage.getItem("access_token");
-          if (!token) {
-            console.error("Access token not found in localStorage.");
-            return;
-          }
-          console.log("Fetching users...");
-          const response = await axios.get("http://localhost:5000/api/users/getAllUsers", {
-            headers: { Authorization: `Bearer ${token}` },
-            withCredentials: true,
-          });
-          console.log("Fetched users:", response.data);
-          setUsers(response.data);
-        } catch (error) {
-          console.error(
-            "Error fetching users:",
-            error.response?.data?.message || error.message
-          );
-          alert("Failed to fetch users. Please check your connection or login again.");
-        }
-      };
-      fetchUsers();
-    }, []);
-  
-    // Delete a user by ID
-    const handleDeleteAccount = async () => {
-      if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        return;
-      }
-  
+import axios from "axios";
+import { Button } from "@mui/material";
+
+const UserDetails = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.delete('http://localhost:5000/api/users/delete', {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          console.error("Access token not found in localStorage.");
+          return;
+        }
+        const response = await axios.get("http://localhost:5000/api/users/getAllUsers", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-
-        window.location.reload ();
+        setUsers(response.data);
       } catch (error) {
-        console.error('Error deleting account:', error.response?.data?.message || error.message);
+        console.error("Error fetching users:", error.response?.data?.message || error.message);
+        alert("Failed to fetch users. Please check your connection or login again.");
       }
     };
-  
-    return (
-      <div
-        className="min-h-screen p-6"
-        style={{
-          backgroundImage:
-            "url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwcHBwcHBwcHBwcHBwoHBwcHBw8ICQcKFREWFiARExMYHSggGCYxGxMTITEhMSkrLi4uFx8zODMsNygtLisBCgoKDQ0NDg0NDisZHxkrKysrKysrKysrKy0rKysrKysrKysrKysrKy0rKystKysrKysrKy0tKysrKysrKysrK//AABEIAJ8BPgMBIgACEQEDEQH/xAAYAAEBAQEBAAAAAAAAAAAAAAAAAQQHA//EABUQAQEAAAAAAAAAAAAAAAAAAAAB/8QAGQEBAQEBAQEAAAAAAAAAAAAAAgEABgQF/8QAFREBAQAAAAAAAAAAAAAAAAAAAAH/2gAMAwEAAhEDEQA/AOnAK+ZBFRCgAxwRRDiAIUAGOCKIcQBjgiiHEAQ4IoxxAEOCKMcQBCgAxRBUQ4AMQAiiKjEAMzQA9Tj4AMcQVEKACHBFRjgAhwAY4gqIcAEKIKjHABDiCohwAY4gqIcAGKCKIUQBjgAigDEgDK0Co9TjoAMUEUQ4gDFABDiAMcAEOCKIcQBjgAhxAEOCKMcQBCgAxxAEOADFEFRCgAxACFBFRiaUUetxsQBCgAxRBUQ4AMcEVEKACHABjgiohwAQ4IqMcAEOCKjHABDgiohQAY4AIUQBigAhADE0APW40RUYoAIUEUQogDHABDiCoxQAQ4AIcQBjgAhxAGOACHEAQ4AMcQVEKADHBFRCgAxQAQmgB63GwAYogqIUAGKCKiHABigiiHEAQ4AMcEVEOADHBFRDlAEOCKMUQBDgijHEAQoAIcQBigAxNAD1ONAGKCKMUQBCgAxRAEOACFBFRjgAhwAY4gCHABDiCoxwAQ4gqIcAGKIKiHABigiiHEAYo0APU40AYgBliCohQAY4IohRAGOCKIUQBDgAxwRRDiAMcEUQ4gCHBFGOIAhwRRiiAIcAGKIKiFGgB6nHgDKAMoijFEAQoAMcQVEKACHBFRjgAhwAYogqIcAEOCKjHABDiCohwAY4IqIUAGOCKIUe4D1OQAGYAZQBiQVEKADFBFEOIAxQAQ4gDHABDgAhxAGOACHECiHABiiAIcAGOIAhwAYo/9k=')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-          <h1 className="text-center text-2xl font-bold text-blue-600 py-6">
-            USER LIST
-          </h1>
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-gray-200 border-separate">
-              <tr>
-                <th className="px-4 py-2 text-black font-semibold">Full Name</th>
-                <th className="px-4 py-2 text-black font-semibold">Email</th>
-                <th className="px-4 py-2 text-black font-semibold">Role</th>
-                <th className="px-4 py-2 text-black font-semibold">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.length > 0 ? (
-                users.map((user) => (
-                  <tr
-                    key={user._id}
-                    className="border-b border-gray-200 hover:bg-gray-50"
-                  >
-                    <td className="px-4 py-3 text-gray-700">{user.fullname}</td>
-                    <td className="px-4 py-3 text-gray-700">{user.email}</td>
-                    <td className="px-4 py-3 text-gray-700">{user.role}</td>
-                    <td className="px-4 py-3">
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteAccount(user._id)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center py-4 text-gray-500">
-                    No users found.
+    fetchUsers();
+  }, []);
+
+  const handleDeleteAccount = async (userId) => {
+    if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("access_token");
+      await axios.delete(`http://localhost:5000/api/users/delete/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      setUsers(users.filter(user => user._id !== userId));
+    } catch (error) {
+      console.error("Error deleting account:", error.response?.data?.message || error.message);
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen p-6"
+      style={{
+        backgroundImage: `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA25hVk1y2o2qy1XJeZB7Bsq7Y6tUvj3kIRQ&s')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <h1 className="text-center text-2xl font-bold text-blue-600 py-6">USER LIST</h1>
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-gray-200 border-separate">
+            <tr>
+              <th className="px-4 py-2 text-black font-semibold">Full Name</th>
+              <th className="px-4 py-2 text-black font-semibold">Email</th>
+              <th className="px-4 py-2 text-black font-semibold">Role</th>
+              <th className="px-4 py-2 text-black font-semibold">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3 text-gray-700">{user.fullname}</td>
+                  <td className="px-4 py-3 text-gray-700">{user.email}</td>
+                  <td className="px-4 py-3 text-gray-700">{user.role}</td>
+                  <td className="px-4 py-3">
+                    <Button variant="contained" color="error" onClick={() => handleDeleteAccount(user._id)}>
+                      Delete
+                    </Button>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center py-4 text-gray-500">
+                  No users found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    );
-  };
-  
-  export default UserDetails;
+    </div>
+  );
+};
+
+export default UserDetails;
