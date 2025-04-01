@@ -140,10 +140,10 @@
   // };
 
 
-
-  import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
+import toast from "react-hot-toast";
 
 const UserDetails = () => {
   const [users, setUsers] = useState([]);
@@ -169,23 +169,29 @@ const UserDetails = () => {
     fetchUsers();
   }, []);
 
-  const handleDeleteAccount = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
-      return;
-    }
+//  { Delete a user by ID}
 
-    try {
-      const token = localStorage.getItem("access_token");
-      await axios.delete(`http://localhost:5000/api/users/delete/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
 
-      setUsers(users.filter(user => user._id !== userId));
-    } catch (error) {
-      console.error("Error deleting account:", error.response?.data?.message || error.message);
-    }
-  };
+const handleDeleteUser = async (userId) => {
+  if (!window.confirm("Are you sure you want to delete this user?")) return;
+ 
+
+  try {
+    const token = localStorage.getItem("access_token");
+    await axios.delete(`http://localhost:5000/api/users/delete/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+
+    setUsers((prevUsers) => prevUsers.filter(user => user._id !== userId));
+    toast.success("User deleted successfully");
+  } catch (error) {
+    console.error("Error deleting user:", error.response?.data?.message || error.message);
+    toast.error("Error deleting user. Check console for details.");
+  }
+};
+
+  
 
   return (
     <div
@@ -216,7 +222,7 @@ const UserDetails = () => {
                   <td className="px-4 py-3 text-gray-700">{user.email}</td>
                   <td className="px-4 py-3 text-gray-700">{user.role}</td>
                   <td className="px-4 py-3">
-                    <Button variant="contained" color="error" onClick={() => handleDeleteAccount(user._id)}>
+                    <Button variant="contained" color="error" onClick={() => handleDeleteUser(user._id)}>
                       Delete
                     </Button>
                   </td>
