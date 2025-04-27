@@ -60,10 +60,17 @@ const UserDetails = () => {
         format: 'a4'
       });
       
-      // Add title
-      doc.setFontSize(20);
+      // Add company name in blue
+      doc.setFontSize(28);
       doc.setFont('helvetica', 'bold');
-      doc.text("User List", 105, 15, { align: 'center' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      doc.setTextColor(41, 128, 185); // Blue color
+      doc.text("Job Xpert", pageWidth / 2, 20, { align: 'center' });
+      
+      // Add table title in black
+      doc.setFontSize(22);
+      doc.setTextColor(0, 0, 0); // Black color
+      doc.text("User Management System", pageWidth / 2, 35, { align: 'center' });
       
       // Prepare data for the table
       const tableColumn = ["Full Name", "Email", "Role"];
@@ -73,28 +80,55 @@ const UserDetails = () => {
         user.role || "N/A"
       ]);
 
-      // Add the table using autoTable
+      // Add the table using autoTable with modern styling
       autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 25,
+        startY: 45,
         margin: { top: 20 },
         theme: 'grid',
         headStyles: {
           fillColor: [41, 128, 185],
           textColor: 255,
           fontStyle: 'bold',
-          fontSize: 12
+          fontSize: 12,
+          halign: 'center',
+          cellPadding: 6
         },
         styles: {
-          fontSize: 10,
-          cellPadding: 3,
-          overflow: 'linebreak'
+          fontSize: 11,
+          cellPadding: 5,
+          overflow: 'linebreak',
+          halign: 'left',
+          lineColor: [200, 200, 200],
+          lineWidth: 0.1
         },
         columnStyles: {
-          0: { cellWidth: 60 },
-          1: { cellWidth: 80 },
-          2: { cellWidth: 40 }
+          0: { cellWidth: 60, halign: 'left' },
+          1: { cellWidth: 80, halign: 'left' },
+          2: { cellWidth: 40, halign: 'right' }
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        tableLineColor: [200, 200, 200],
+        tableLineWidth: 0.1,
+        didDrawPage: function(data) {
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          const pageCount = doc.internal.getNumberOfPages();
+          doc.text(`Page ${data.pageNumber} of ${pageCount}`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+        },
+        didDrawCell: function (data) {
+          // Remove right border for the last column (Role)
+          if (data.column.index === 2 && data.cell.section === 'body') {
+            const { table, cell } = data;
+            const doc = data.doc;
+            doc.setDrawColor(255, 255, 255); // Set to white (invisible)
+            doc.setLineWidth(0.1);
+            doc.line(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
+            doc.setDrawColor(200, 200, 200); // Reset to default
+          }
         }
       });
 
