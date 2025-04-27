@@ -58,16 +58,19 @@ export default function SignInForm() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-white">
             <div className="flex h-screen">
                 {/* Left side - Illustration */}
-                <div className="hidden md:flex md:w-1/2 items-center justify-center p-8">
+                <div className="hidden md:flex md:w-1/2 bg-white items-center justify-center p-8">
                     <div className="text-center">
-                        <h1 className="text-4xl font-bold mb-4 text-gray-800">Welcome to JobXpert</h1>
-                        <p className="text-xl mb-8 text-gray-600">Find your dream job with our platform</p>
+                        <h1 className="text-4xl font-bold mb-4">
+                            <span className="text-blue-500">Welcome to </span>
+                            <span className="text-blue-600 font-extrabold tracking-wide">JobXpert</span>
+                        </h1>
+                        <p className="text-xl mb-8 text-black font-bold">Find your dream job with our platform</p>
                         <div className="flex justify-center">
                             <img 
-                                src="https://img.freepik.com/free-vector/privacy-policy-concept-illustration_114360-7853.jpg" 
+                                src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7963.jpg" 
                                 alt="Login Illustration" 
                                 className="w-[400px] h-auto rounded-lg object-contain"
                             />
@@ -76,8 +79,8 @@ export default function SignInForm() {
                 </div>
 
                 {/* Right side - Login Form */}
-                <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-                    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
+                    <div className="bg-white p-8 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.25)] w-full max-w-md">
                         <h2 className="text-blue-500 text-4xl font-bold text-center mb-6">Sign In</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-5">
