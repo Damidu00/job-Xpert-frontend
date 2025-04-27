@@ -144,7 +144,7 @@ export default function SignupForm() {
                         </div>
 
                         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 mb-2">
-                            Sign Up
+                            Register
                         </button>
 
                         <p className="text-center text-sm">
