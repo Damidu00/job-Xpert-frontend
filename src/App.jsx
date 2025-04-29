@@ -7,9 +7,7 @@ import AdminHomePage from './pages/admin/adminHomePage';
 import LoginPage from './Components/LoginPage';
 import SignupPage from './Components/SignupPage';
 import { Toaster } from 'react-hot-toast';
-import Profile from './Components/profile';
-import UserDetails from './pages/admin/userDetails';
- 
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,9 +24,6 @@ function App() {
           <Route path='/admin/*' element={<AdminHomePage/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
-          <Route path='/cv-dashboard' element={<Dashboard/>}/>
-          <Route path='/profile' element={<Profile/>}/>
-          <Route path='/userDetails' element={<UserDetails/>}/>
 
         </Routes>
       </BrowserRouter>
