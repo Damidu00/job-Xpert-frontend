@@ -2,30 +2,31 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
+import { useLocation } from 'react-router-dom';
 
 export default function AddSkills({ onClose }) {
-  // State variables for form fields
+  const location = useLocation()
+  const userId = location.state.userId
   const [formFields, setFormFields] = useState([{ category: '', items: '' }]);
 
-  // Handle form field changes
   const handleFormChange = (event, index) => {
     const data = [...formFields];
     data[index][event.target.name] = event.target.value;
     setFormFields(data);
   };
 
-  // Add a new skill field
+
   const addFields = () => {
     setFormFields([...formFields, { category: '', items: '' }]);
   };
 
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const postData = {
-      userId: 'test1',
-      cvId: 'cv01',
+      userId,
+      cvId: 'cv02',
       skills: formFields,
     };
 
