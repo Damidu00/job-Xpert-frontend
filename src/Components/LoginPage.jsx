@@ -9,7 +9,7 @@ export default function SignInForm() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        role: "user",
+        role: "",
     });
 
     const navigate = useNavigate();

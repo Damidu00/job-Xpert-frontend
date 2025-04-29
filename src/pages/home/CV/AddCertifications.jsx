@@ -2,9 +2,11 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import { CiCirclePlus } from 'react-icons/ci';
+import { useLocation } from 'react-router-dom';
 
 export default function AddCertifications({ onClose }) {
-  // State variables for form fields
+  const location = useLocation()
+  const userId = location.state.userId
   const [formFields, setFormFields] = useState([
     { instituteName: '', certificateName: '', Link: '' },
   ]);
@@ -26,8 +28,8 @@ export default function AddCertifications({ onClose }) {
     e.preventDefault();
 
     const postData = {
-      userId: 'test1',
-      cvId: 'cv01',
+      userId,
+      cvId: 'cv02',
       certificates: formFields,
     };
 

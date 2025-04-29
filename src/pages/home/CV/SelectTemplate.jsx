@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import cv00 from '../../../../public/cv00.png';
 import cv01 from '../../../../public/cv01.png';
 import cv02 from '../../../../public/cv02.png';
 
 export default function SelectTemplate() {
-  // State to track the currently hovered image
+  const location = useLocation()
+  const userId = location.state?.userId
+  const username = location.state?.username
+  console.log(userId)
+  console.log(username)
   const [hoveredImage, setHoveredImage] = useState(null);
   const navigate = useNavigate();
 
   const handleCvId = (id) => {
-    navigate("/viewtemplate/" + id);
+    navigate("/viewtemplate/" + id,{state : {userId : userId}});
   };
 
   return (
