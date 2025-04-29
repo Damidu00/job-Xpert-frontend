@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
+import { Button, TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import toast from "react-hot-toast";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
 const UserDetails = () => {
   const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -21,6 +24,7 @@ const UserDetails = () => {
           withCredentials: true,
         });
         setUsers(response.data);
+        setFilteredUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error.response?.data?.message || error.message);
         alert("Failed to fetch users. Please check your connection or login again.");
@@ -28,6 +32,14 @@ const UserDetails = () => {
     };
     fetchUsers();
   }, []);
+
+  // Handle search
+  useEffect(() => {
+    const filtered = users.filter(user =>
+      user.fullname?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  }, [searchQuery, users]);
 
   const handleDeleteUser = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
@@ -39,7 +51,13 @@ const UserDetails = () => {
         withCredentials: true,
       });
 
-      setUsers((prevUsers) => prevUsers.filter(user => user._id !== userId));
+      setUsers((prevUsers) => {
+        const updatedUsers = prevUsers.filter(user => user._id !== userId);
+        setFilteredUsers(updatedUsers.filter(user =>
+          user.fullname?.toLowerCase().includes(searchQuery.toLowerCase())
+        ));
+        return updatedUsers;
+      });
       toast.success("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user:", error.response?.data?.message || error.message);
@@ -49,7 +67,7 @@ const UserDetails = () => {
 
   const downloadPDF = () => {
     try {
-      if (!users || users.length === 0) {
+      if (!filteredUsers || filteredUsers.length === 0) {
         toast.error("No users data available to generate PDF");
         return;
       }
@@ -74,7 +92,7 @@ const UserDetails = () => {
       
       // Prepare data for the table
       const tableColumn = ["Full Name", "Email", "Role"];
-      const tableRows = users.map(user => [
+      const tableRows = filteredUsers.map(user => [
         user.fullname || "N/A",
         user.email || "N/A",
         user.role || "N/A"
@@ -144,11 +162,27 @@ const UserDetails = () => {
   return (
     <div className="min-h-screen p-6" style={{ backgroundImage: `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA25hVk1y2o2qy1XJeZB7Bsq7Y6tUvj3kIRQ&s')`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
       <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden relative p-6">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-blue-600">USER LIST</h1>
-          <Button variant="contained" color="primary" onClick={downloadPDF}>
-            Download PDF
-          </Button>
+          <div className="flex gap-4 items-center">
+            <TextField
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="small"
+              className="bg-white rounded-md"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon className="text-gray-400" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button variant="contained" color="primary" onClick={downloadPDF}>
+              Download PDF
+            </Button>
+          </div>
         </div>
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-200 border-separate">
@@ -160,8 +194,8 @@ const UserDetails = () => {
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
                 <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3 text-gray-700">{user.fullname}</td>
                   <td className="px-4 py-3 text-gray-700">{user.email}</td>
@@ -176,7 +210,7 @@ const UserDetails = () => {
             ) : (
               <tr>
                 <td colSpan="4" className="text-center py-4 text-gray-500">
-                  No users found.
+                  {searchQuery ? "No users found matching your search." : "No users found."}
                 </td>
               </tr>
             )}
