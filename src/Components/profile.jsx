@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AiOutlineMail } from 'react-icons/ai';
 import { FiEdit } from 'react-icons/fi';
@@ -197,24 +197,37 @@ const Profile = () => {
 
       {/* Update Profile Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        {/* Dialog Title: Centered and styled */}
-        <DialogTitle className=''>
-          <Typography variant="h4" fontWeight="bold" textAlign={'center'}color='blue' >
-            Update Profile
-          </Typography>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+          Update Profile
         </DialogTitle>
+        <DialogContent>
+          <UpdateProfile 
+            setOpen={setOpen} 
+            currentUser={user}
+            onUpdateSuccess={() => {
+              // Refresh user data after update
+              const fetchUser = async () => {
+                try {
+                  const token = localStorage.getItem('access_token');
+                  if (!token) {
+                    console.error('No authentication token found.');
+                    return;
+                  }
 
-        {/* Dialog Content */}
-        <DialogContent >
-          <UpdateProfile setOpen={setOpen} />
+                  const response = await axios.get('http://localhost:5000/api/users/currentuser', {
+                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true,
+                  });
+
+                  setUser(response.data);
+                } catch (error) {
+                  console.error('Error fetching user:', error.response?.data?.message || error.message);
+                }
+              };
+              fetchUser();
+            }}
+          />
         </DialogContent>
-
-        {/* Dialog Actions */}
-        <DialogActions >
-          <Button onClick={() => setOpen(false)} color="primary"  >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );
