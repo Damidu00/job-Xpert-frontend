@@ -29,7 +29,7 @@ const CompanyCreate = () => {
                 required 
                 />
                 <div className="flex item-center gap-2 my-10">
-                    <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-black-700 rounded" onClick={() => navigate("/companies")}>Cancle</button>
+                    <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-black-700 rounded" onClick={() => navigate("/company")}>Cancle</button>
                     <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-black-700 rounded" onClick={registerNewCompany}>Continue</button>
 
                 </div>
