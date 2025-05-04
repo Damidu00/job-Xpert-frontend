@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { FaCamera } from 'react-icons/fa';
 
 const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
   const [input, setInput] = useState({
@@ -14,6 +15,8 @@ const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
     skills: "",
   });
   const [resume, setResume] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
     if (currentUser) {
@@ -24,6 +27,7 @@ const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
         bio: currentUser.profile?.bio || "",
         skills: currentUser.profile?.skills?.join(", ") || "",
       });
+      setPreviewUrl(currentUser.profile?.profilePhoto || "");
     }
   }, [currentUser]);
 
@@ -33,6 +37,18 @@ const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
+  };
+
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePhoto(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -53,6 +69,10 @@ const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
 
     if (resume) {
       formDataToSend.append("resume", resume);
+    }
+
+    if (profilePhoto) {
+      formDataToSend.append("profilePhoto", profilePhoto);
     }
 
     try {
@@ -80,6 +100,27 @@ const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
 
   return (
     <div className="rounded-lg p-6 space-y-8">
+      {/* Profile Photo Upload Section */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="relative w-32 h-32 mb-4">
+          <img
+            src={previewUrl || "https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg"}
+            alt="Profile"
+            className="w-full h-full rounded-full object-cover border-2 border-gray-300"
+          />
+          <label className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 cursor-pointer hover:bg-blue-600">
+            <FaCamera className="text-lg" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePhotoChange}
+              className="hidden"
+            />
+          </label>
+        </div>
+        <p className="text-sm text-gray-500">Click the camera icon to change your profile photo</p>
+      </div>
+
       <TextField
         label="Full Name"
         variant="outlined"
