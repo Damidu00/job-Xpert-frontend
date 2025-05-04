@@ -1,11 +1,12 @@
- // UpdateProfile.jsx
+// UpdateProfile.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { FaCamera } from 'react-icons/fa';
 
-const UpdateProfile = ({ setOpen }) => {
+const UpdateProfile = ({ setOpen, currentUser, onUpdateSuccess }) => {
   const [input, setInput] = useState({
     fullname: "",
     email: "",
@@ -14,39 +15,21 @@ const UpdateProfile = ({ setOpen }) => {
     skills: "",
   });
   const [resume, setResume] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("access_token");
-
-        if (!token) {
-          toast.error("Unauthorized! Please log in again.");
-          return;
-        }
-
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        });
-
-        if (response.data.success) {
-          const user = response.data.user;
-          setInput({
-            fullname: user.fullname || "",
-            email: user.email || "",
-            phoneNumber: user.phoneNumber || "",
-            bio: user.profile?.bio || "",
-            skills: user.profile?.skills?.join(", ") || "",
-          });
-        }
-      } catch (error) {
-        // toast.error("Failed to load user data.");
-      }
-    };
-
-    fetchUser();
-  }, []);
+    if (currentUser) {
+      setInput({
+        fullname: currentUser.fullname || "",
+        email: currentUser.email || "",
+        phoneNumber: currentUser.phoneNumber || "",
+        bio: currentUser.profile?.bio || "",
+        skills: currentUser.profile?.skills?.join(", ") || "",
+      });
+      setPreviewUrl(currentUser.profile?.profilePhoto || "");
+    }
+  }, [currentUser]);
 
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -54,6 +37,18 @@ const UpdateProfile = ({ setOpen }) => {
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
+  };
+
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePhoto(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -76,9 +71,13 @@ const UpdateProfile = ({ setOpen }) => {
       formDataToSend.append("resume", resume);
     }
 
+    if (profilePhoto) {
+      formDataToSend.append("profilePhoto", profilePhoto);
+    }
+
     try {
       const response = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/api/users/profile/update",
+        "http://localhost:5000/api/users/profile/update",
         formDataToSend,
         {
           headers: {
@@ -90,109 +89,122 @@ const UpdateProfile = ({ setOpen }) => {
       );
 
       if (response.data.success) {
-        toast.success(response.data.message);
+        toast.success("Profile updated successfully!");
+        onUpdateSuccess && onUpdateSuccess();
         setOpen(false);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   };
 
   return (
-    <div className=" rounded-lg shadow-md p-3 m-2 space-x-3"  >
+    <div className="rounded-lg p-6 space-y-8">
+      {/* Profile Photo Upload Section */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="relative w-32 h-32 mb-4">
+          <img
+            src={previewUrl || "https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg"}
+            alt="Profile"
+            className="w-full h-full rounded-full object-cover border-2 border-gray-300"
+          />
+          <label className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 cursor-pointer hover:bg-blue-600">
+            <FaCamera className="text-lg" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePhotoChange}
+              className="hidden"
+            />
+          </label>
+        </div>
+        <p className="text-sm text-gray-500">Click the camera icon to change your profile photo</p>
+      </div>
 
-        <div className="mb-2">
-           {/* Full Name */}
-        <TextField
-          label="Full Name"
-          variant="outlined"
-          fullWidth
-          value={input.fullname}
-          onChange={handleChange}
-          name="fullname"
-          className=""
-        />
-        </div>
+      <TextField
+        label="Full Name"
+        variant="outlined"
+        fullWidth
+        value={input.fullname}
+        onChange={handleChange}
+        name="fullname"
+        className="mb-8"
+        sx={{ marginBottom: '32px' }}
+      />
       
-      
-        <div className="mb-2">
-          {/* Email */}
-        <TextField
-          label="Email"
-          variant="outlined"
-          fullWidth
-          value={input.email}
-          onChange={handleChange}
-          name="email"
-          className="mb-5"
-        />
-      
-        </div>
+      <TextField
+        label="Email"
+        variant="outlined"
+        fullWidth
+        value={input.email}
+        onChange={handleChange}
+        name="email"
+        className="mb-8"
+        sx={{ marginBottom: '32px' }}
+      />
 
-        <div>
-           {/* Phone Number */}
-        <TextField
-          label="Phone Number"
-          variant="outlined"
-          fullWidth
-          value={input.phoneNumber}
-          onChange={handleChange}
-          name="phoneNumber"
-          sx={{ mb: 2 }}
-        />
-        </div>
+      <TextField
+        label="Phone Number"
+        variant="outlined"
+        fullWidth
+        value={input.phoneNumber}
+        onChange={handleChange}
+        name="phoneNumber"
+        className="mb-8"
+        sx={{ marginBottom: '32px' }}
+      />
          
-         <div className="mb-4">
-         <TextField
-          label="Bio"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={1}
-          value={input.bio}
-          onChange={handleChange}
-          name="bio"
-          className="mb-4"
-        />
-         </div>
-         <div>
-           {/* Skills */}
-        <TextField
-          label="Skills"
-          variant="outlined"
-          fullWidth
-          value={input.skills}
-          onChange={handleChange}
-          name="skills"
-          className="mb-4"
-        />
-         </div>
+      <TextField
+        label="Bio"
+        variant="outlined"
+        fullWidth
+        multiline
+        rows={3}
+        value={input.bio}
+        onChange={handleChange}
+        name="bio"
+        className="mb-8"
+        sx={{ marginBottom: '32px' }}
+      />
+
+      <TextField
+        label="Skills (comma-separated)"
+        variant="outlined"
+        fullWidth
+        value={input.skills}
+        onChange={handleChange}
+        name="skills"
+        className="mb-8"
+        sx={{ marginBottom: '32px' }}
+      />
       
-        {/* Resume Upload */}
-      <div className="py-3 px-2" >
-        <label className="block text-sm font-medium text-gray-700">Upload Resume</label>
+      <div className="py-6 mb-8">
+        <label className="block text-sm font-medium text-gray-700 mb-4">Upload Resume (PDF)</label>
         <input
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
-          className="block w-50 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
         />
-               
-      </div >
+      </div>
        
-      {/* Submit Button */}
-      <div className="flex justify-center">
-      <Button
-        variant="contained"
-        color="primary"
-        size="big"
-        sx={{ fontWeight: 'bold' }}
-        
-        onClick={handleSubmit}
-        className="bg-blue-500 hover:bg-blue-800 text-white font-bold p-4 rounded "
-      >
-        Update Profile
-      </Button>
+      <div className="flex justify-end gap-4 mt-10">
+        <Button
+          variant="outlined"
+          onClick={() => setOpen(false)}
+          className="px-6 py-2"
+          sx={{ height: '48px' }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-600 px-6 py-2"
+          sx={{ height: '48px' }}
+        >
+          Update Profile
+        </Button>
       </div>
     </div>
   );
