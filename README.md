@@ -51,57 +51,187 @@ src/
 /admin/*      -> Admin Dashboard
 /cvdashboard  -> CV Dashboard
 
-## 🔐 Authentication
+<!--
+	README.md (comprehensive, emoji-friendly)
+	Generated from an analysis of package.json, App.jsx, auth.js, redux slices and key components.
+-->
 
-✅ Secure Login / Signup system
-🔐 Protected Routes using role-based access
-🔄 Persistent login state with frontend auth logic
+# � Job-Xpert Frontend
 
-## ✨ Features
+A modern, responsive React frontend for the Job-Xpert job portal — built with Vite, React 19, Material UI and Tailwind CSS.
 
-🪄 Modern UI with Material-UI and TailwindCSS
-🧠 Hooks-first approach for clean state management
-📨 CV Dashboard for job seekers
-🛠️ Admin Panel for managing platform content
-🍞 Toast notifications with React Hot Toast
-❗ User-friendly alerts using SweetAlert2
-🔁 Smooth routing with React Router DOM
-📱 Fully responsive design across all devices
+![React](https://img.shields.io/badge/React-v19-blue?logo=react)
+![Vite](https://img.shields.io/badge/Vite-Bundler-yellow?logo=vite)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Utility--First-blue?logo=tailwindcss)
+![MUI](https://img.shields.io/badge/MUI-7.x-purple?logo=mui)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## 🧪 Getting Started
+---
 
-# ▶️ Run Locally
+## ✨ What this repo contains
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/job-xpert-frontend.git
+- A single-page React application (Vite) that provides:
+	- Authentication (login / signup) flows
+	- Role-aware UI (admin, user, company)
+	- CV builder/dashboard with multiple templates
+	- Admin pages to manage companies and jobs
 
-# Navigate into the project
-cd job-xpert-frontend
+The app uses Redux (Redux Toolkit) for simple state slices and Axios for HTTP requests.
 
-# Install dependencies
+## 🧭 Quick status (from code analysis)
+
+- Entry: `src/main.jsx`, mounts `App`.
+- Router: `App.jsx` defines routes for `/`, `/login`, `/signup`, `/admin/*`, and CV pages under `/` (see `pages/home/homepage.jsx`).
+- Auth helpers: `src/auth.js` stores/removes `access_token` in localStorage.
+- Redux: `src/redux/store.js` combines `user` and `auth` slices (`userSlice.js`, `authSlice.js`).
+- Login/Signup: `src/Components/LoginPage.jsx` and `src/Components/SignupPage.jsx` use axios and environment variable `VITE_BACKEND_URL` to call `/api/users/login` and `/api/users/register`.
+
+## 🎯 Features
+
+- ✅ React 19 + Vite for fast dev experience
+- ✅ Tailwind CSS + Material-UI for styling
+- ✅ Axios-powered requests with credentials support
+- ✅ Toast notifications (`react-hot-toast`) and SweetAlert2
+- ✅ Redux Toolkit slices for `user` and `auth`
+- ✅ CV builder with templates (cv00, cv01, cv02)
+- ✅ Role selection on login & signup (admin, user, company)
+
+## 🏗 Tech stack & main dependencies
+
+- react, react-dom (v19)
+- vite (v6+)
+- @mui/material, @mui/icons-material
+- tailwindcss, @tailwindcss/vite
+- axios
+- react-router-dom (v7)
+- reduxjs/toolkit (used via imports in store)
+- react-hot-toast, sweetalert2, react-icons
+
+See full versions in `package.json`.
+
+## 📁 Project structure (important files)
+
+```
+src/
+	├─ assets/                # images and static assets
+	├─ Components/            # auth forms and shared components (LoginPage, SignupPage, etc.)
+	├─ pages/
+	│   ├─ home/              # CV flow, homepage and CV templates
+	│   └─ admin/             # admin dashboard pages (Companies, CompanyCreate, Jobs)
+	├─ redux/                 # Redux slices and store
+	├─ utils/                 # constants and helpers
+	├─ App.jsx                # Routes and main app composition
+	├─ main.jsx               # React entry
+	└─ auth.js                # token helper (get/set/remove access_token)
+```
+
+## 🔧 Environment variables
+
+This project expects at least the following environment key during development and build:
+
+- `VITE_BACKEND_URL` — base URL of the backend API (example: `http://localhost:5000`)
+
+Create a `.env` file at the project root (Vite reads `VITE_` prefixed vars):
+
+```powershell
+# .env
+VITE_BACKEND_URL=http://localhost:5000
+```
+
+Note: components call endpoints such as `/api/users/login` and `/api/users/register` via `import.meta.env.VITE_BACKEND_URL + '/api/users/...'`.
+
+## ⚙️ Available scripts
+
+Defined in `package.json`:
+
+- `npm run dev` — start Vite dev server (HMR)  
+- `npm run build` — build production assets  
+- `npm run preview` — preview production build  
+- `npm run lint` — run ESLint across the project
+
+Example (PowerShell):
+
+```powershell
 npm install
-
-# Start the development server
 npm run dev
-
 ```
-## 🔨 Build for Production
 
-```bash
-npm run build
+## � Authentication flow (summary)
+
+- Login (`LoginPage.jsx`) POSTs to `${VITE_BACKEND_URL}/api/users/login` with credentials + role. On success the response contains `data.access_token` which is saved to localStorage via `setAuthToken`.
+- Signup (`SignupPage.jsx`) POSTs `multipart/form-data` to `${VITE_BACKEND_URL}/api/users/register` (supports profile photo upload).
+- Token helper: `src/auth.js` exports `getAuthToken`, `setAuthToken`, `removeAuthToken`.
+
+Security note: Tokens are stored in localStorage in this code; consider using httpOnly cookies for production or an additional refresh-token strategy.
+
+## � Routing overview
+
+- `/` — home (CV dashboard and CV-builder routes mounted inside `pages/home/homepage.jsx`)
+- `/login` — sign in page
+- `/signup` — sign up page
+- `/admin/*` — admin dashboard pages and company/job management
+- CV routes (examples): `/selecttemplate`, `/addaboutme`, `/viewtemplate/cv00`
+
+## ✅ Quick start (development)
+
+1. Clone repo
+
+```powershell
+git clone https://github.com/Damidu00/job-Xpert-frontend.git
+cd job-Xpert-frontend
 ```
-## 🧑‍💻 Development Methodologies
 
-✅ Component-based architecture
-🗂️ Separation of concerns with pages, components, and utils
-🧼 Linting with ESLint
-🔁 Hot Module Replacement (HMR) with Vite
-🔍 TypeScript-ready configuration
+2. Create `.env` with backend URL
 
-## 🙌 Contribution Guide
+```powershell
+echo "VITE_BACKEND_URL=http://localhost:5000" > .env
+```
 
-# We welcome all contributions! To get started:
+3. Install and run
+
+```powershell
+npm install
+npm run dev
+```
+
+Open http://localhost:5173 (or the port Vite displays).
+
+## 🧪 Tests & linting
+
+- Linting: `npm run lint` (ESLint is configured in the repo). Add unit tests as needed — no test runner is present in the current repo snapshot.
+
+## � Deployment notes
+
+- Build with `npm run build` and serve static files from your static host (Netlify, Vercel, Surge) or a node static server.
+- Ensure environment variables are provided to the hosting platform (VITE_BACKEND_URL).
+
+## 🙌 Contribution
+
+If you'd like to contribute:
+
+1. Fork the repo
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit changes, push, and open a PR
+
+Please follow existing code style (JSX + Tailwind / MUI) and keep components small and focused.
+
+## ⚠️ Troubleshooting (common issues)
+
+- "CORS" errors: ensure the backend allows the dev origin or configure a proxy.
+- "Network Error" on login: verify `VITE_BACKEND_URL` and that backend is running.
+- Token not saved: check browser localStorage and console logs (login component logs token on success).
+
+## 📌 Next recommended improvements
+
+- Move token handling to a secure cookie + refresh-token flow.
+- Add unit/integration tests (Vitest + React Testing Library).
+- TypeScript migration for stronger typing.
+- Add CI pipeline to run lint and tests on PRs.
+
+---
+
+Made with ❤️ by the Job-Xpert contributors.
+
 ```bash
 # Fork the repo and clone your copy
 git clone https://github.com/your-username/job-xpert-frontend.git
